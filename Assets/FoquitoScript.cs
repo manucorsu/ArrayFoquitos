@@ -15,10 +15,13 @@ public class FoquitoScript : MonoBehaviour
 {
     [SerializeField] GameObject[] colors; //SerializeField se usa para poder ver la variable en el Inspector sin que sea pública.
     public int currentLightIndex = -1;
+    int count; //cuenta cuántas luces se tienen que prender
 
     void Start()
     {
-        
+        count = colors.Length * 3; // empieza en length*3 porque cada luz se prende 3 veces.
+                                    //cada vez que se prende una luz se le resta 1
+                                    //cuando es = 0 se empiezan a destruir las luces.
     }
 
     // Update is called once per frame
@@ -29,14 +32,22 @@ public class FoquitoScript : MonoBehaviour
 
     public void ActivateNextLight()
     {
-        //EN EL EXAMEN PROBABLEMENTE NOS HAGA IMPLEMENTAR ESTA FUNCIÓN (adaptada al ejercicio)
-        currentLightIndex++; //empieza en -1, así que cuando hacemos esto ya pasa al 1er elemento de la lista [0]
-        if (currentLightIndex >= colors.Length) //siempre hay que chequear que el índice sea válido
+        if(count > 0)
         {
-            currentLightIndex = 0;
+            //EN EL EXAMEN PROBABLEMENTE NOS HAGA IMPLEMENTAR ESTA FUNCIÓN (adaptada al ejercicio)
+            currentLightIndex++; //empieza en -1, así que cuando hacemos esto ya pasa al 1er elemento de la lista [0]
+            if (currentLightIndex >= colors.Length) //siempre hay que chequear que el índice sea válido
+            {
+                currentLightIndex = 0;
+            }
+            DeactivateAllLights();
+            colors[currentLightIndex].SetActive(true);
+            count--;
         }
-        DeactivateAllLights();
-        colors[currentLightIndex].SetActive(true);
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     /*ignorar*/ public void ActivatePreviousLight()
